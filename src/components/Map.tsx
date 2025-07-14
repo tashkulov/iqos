@@ -2,15 +2,11 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Настройка дефолтной иконки
-delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: new URL("leaflet/dist/images/marker-icon-2x.png", import.meta.url).toString(),
     iconUrl: new URL("leaflet/dist/images/marker-icon.png", import.meta.url).toString(),
     shadowUrl: new URL("leaflet/dist/images/marker-shadow.png", import.meta.url).toString(),
 });
-
-// Типы локаций
 interface Location {
     name: string;
     type: string;

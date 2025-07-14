@@ -6,6 +6,7 @@ import CollectionsPage from "./pages/CollectionsPage.tsx";
 import CapsulesPage from "./pages/CapsulesPage.tsx";
 import UsersPage from "./pages/UsersPage.tsx";
 import RewardsPage from "./pages/RewardsPage.tsx";
+import MapPage from "./pages/MapPage.tsx";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/capsules" element={<CapsulesPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/rewards" element={<RewardsPage />} />
+            <Route path="/map" element={<MapPage />} />
 
         </Routes>
     );

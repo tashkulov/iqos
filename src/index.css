@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components {
+    .btn-primary {
+        @apply w-full flex items-center justify-center gap-2 rounded-xl py-2.5 px-4 font-medium text-black bg-[#00d5d5] hover:bg-[#00c0c0] transition;
+    }
+
+    .btn-secondary {
+        @apply w-full flex items-center justify-center gap-2 rounded-xl py-2.5 px-4 font-medium text-black border border-[#00d5d5] bg-[#f8f8f8] hover:bg-[#e6fefe] transition;
+    }
+}
+@layer components {
+    .category-btn {
+        @apply flex items-center gap-2 text-sm px-4 py-1.5 border rounded-full transition font-medium;
+    }
+
+    .category-btn-default {
+        @apply border-gray-300 text-black bg-white hover:bg-gray-100;
+    }
+
+    .category-btn-active {
+        @apply bg-[#00d5d5] text-black border-[#00d5d5];
+    }
+}

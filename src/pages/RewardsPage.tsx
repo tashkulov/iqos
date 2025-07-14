@@ -1,4 +1,3 @@
-import Sidebar from "../components/Sidebar";
 import RewardCard from "../components/RewardCard";
 import MainLayout from "../components/MainLayout.tsx";
 
@@ -30,7 +29,6 @@ const RewardsPage = () => {
     return (
         <MainLayout>
         <div className="flex bg-[#f0ffff] min-h-screen">
-            <Sidebar />
             <div className="flex-1 p-6">
                 <h2 className="text-xl font-semibold mb-4">
                     Информация о пользователях

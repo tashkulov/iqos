@@ -31,6 +31,7 @@ const CollectionsPage = () => {
             ...prev,
         ]);
     };
+    const [search, setSearch] = useState("");
 
     const handleDeleteClick = (collection: CapsuleCollection) => {
         setCollectionToDelete(collection);
@@ -90,14 +91,17 @@ const CollectionsPage = () => {
                         <input
                             type="text"
                             placeholder="Поиск..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
                             className="mt-1 px-3 py-1 border border-gray-300 rounded-md text-sm"
                         />
+
                     </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
                     <div className="flex items-center justify-between mb-4">
-                        <label className="text-sm text-gray-600">
+                    <label className="text-sm text-gray-600">
                             <select className="border border-gray-300 rounded px-2 py-1 text-sm">
                                 <option>10</option>
                                 <option>25</option>
@@ -120,9 +124,20 @@ const CollectionsPage = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {collections.map((c) => (
-                            <CollectionItem key={c.id + c.name} collection={c} onDelete={() => handleDeleteClick(c)} onEdit={() => handleEditClick(c)} />
-                        ))}
+                        {collections
+                            .filter(c =>
+                                c.name.toLowerCase().includes(search.toLowerCase()) ||
+                                c.description.toLowerCase().includes(search.toLowerCase())
+                            )
+                            .map((c) => (
+                                <CollectionItem
+                                    key={c.id + c.name}
+                                    collection={c}
+                                    onDelete={() => handleDeleteClick(c)}
+                                    onEdit={() => handleEditClick(c)}
+                                />
+                            ))}
+
                         </tbody>
                     </table>
                 </div>

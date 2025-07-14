@@ -14,7 +14,7 @@ const CollectionItem = ({ collection, onDelete, onEdit }: Props) => {
                 <div className="flex items-center gap-2">
           <span
               className="w-3.5 h-3.5 rounded-full"
-              style={{ backgroundColor: collection.color }}
+              style={{backgroundColor: collection.color}}
           />
                     <span className="text-sm font-medium text-gray-800">{collection.name}</span>
                 </div>
@@ -40,28 +40,28 @@ const CollectionItem = ({ collection, onDelete, onEdit }: Props) => {
             </td>
 
             <td className="px-4 py-6">
-        <span
-            className={`text-xs font-semibold px-4 py-[6px] rounded-full ${
-                collection.status === "active"
-                    ? "bg-[#00D0CA] text-white"
-                    : "bg-[#F14B4B] text-white"
-            }`}
-        >
-          {collection.status === "active" ? "Активна" : "Не активна"}
-        </span>
+  <span
+      className={`text-xs font-semibold px-4 py-[6px] rounded-full whitespace-nowrap ${
+          collection.status === "active"
+              ? "bg-[#00D0CA] text-white"
+              : "bg-[#F14B4B] text-white"
+      }`}
+  >
+    {collection.status === "active" ? "Активна" : "Не активна"}
+  </span>
             </td>
 
             <td className="px-4 py-6 text-sm text-gray-800 whitespace-nowrap">{collection.id}</td>
 
             <td className="px-4 py-6">
                 <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#00C8B3]" onClick={onEdit}>
-                    <FaPen size={14} />
+                    <FaPen size={14}/>
                 </button>
             </td>
 
             <td className="px-4 py-6 rounded-r-xl">
                 <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#F14B4B]" onClick={onDelete}>
-                    <FaTrash size={14} />
+                    <FaTrash size={14}/>
                 </button>
             </td>
         </tr>

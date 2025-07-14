@@ -3,9 +3,11 @@ import type { CapsuleCollection } from "../collectionsData.ts";
 
 interface Props {
     collection: CapsuleCollection;
+    onDelete?: () => void;
+    onEdit?: () => void;
 }
 
-const CollectionItem = ({ collection }: Props) => {
+const CollectionItem = ({ collection, onDelete, onEdit }: Props) => {
     return (
         <tr className="rounded-xl bg-[#f8feff]">
             <td className="px-4 py-6 rounded-l-xl">
@@ -52,13 +54,13 @@ const CollectionItem = ({ collection }: Props) => {
             <td className="px-4 py-6 text-sm text-gray-800 whitespace-nowrap">{collection.id}</td>
 
             <td className="px-4 py-6">
-                <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#00C8B3]">
+                <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#00C8B3]" onClick={onEdit}>
                     <FaPen size={14} />
                 </button>
             </td>
 
             <td className="px-4 py-6 rounded-r-xl">
-                <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#F14B4B]">
+                <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#F14B4B]" onClick={onDelete}>
                     <FaTrash size={14} />
                 </button>
             </td>

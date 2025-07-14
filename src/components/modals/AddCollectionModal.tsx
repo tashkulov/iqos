@@ -4,9 +4,23 @@ import iconColl from "../../assets/icon/addCollectionIcon.svg"
 interface Props {
     isOpen: boolean;
     onClose: () => void;
+    onAdd: (collection: { name: string; color: string; description: string }) => void;
 }
 
-const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose }) => {
+const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
+    const [name, setName] = React.useState("");
+    const [color, setColor] = React.useState("");
+    const [description, setDescription] = React.useState("");
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!name || !color) return;
+        onAdd({ name, color, description });
+        setName("");
+        setColor("");
+        setDescription("");
+        onClose();
+    };
     if (!isOpen) return null;
 
     return (
@@ -33,7 +47,7 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     </div>
                 </div>
 
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleSubmit}>
                     <div className="flex gap-4">
                         <div className="flex-1">
                             <label className="text-sm text-gray-500">Название</label>
@@ -41,15 +55,17 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose }) => {
                                 type="text"
                                 className="w-full border rounded-md px-3 py-2 mt-1 text-sm"
                                 placeholder="Солнце"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
                             />
                         </div>
                         <div className="flex-1">
                             <label className="text-sm text-gray-500">Цвет капсулы</label>
-                            <select className="w-full border rounded-md px-3 py-2 mt-1 text-sm">
-                                <option>Выберите</option>
-                                <option>Оранжевый</option>
-                                <option>Фиолетовый</option>
-                                <option>Бирюзовый</option>
+                            <select className="w-full border rounded-md px-3 py-2 mt-1 text-sm" value={color} onChange={e => setColor(e.target.value)}>
+                                <option value="">Выберите</option>
+                                <option value="#fbc748">Оранжевый</option>
+                                <option value="#ccbae5">Фиолетовый</option>
+                                <option value="#84edea">Бирюзовый</option>
                             </select>
                         </div>
                     </div>
@@ -60,12 +76,14 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose }) => {
                             className="w-full border rounded-md px-3 py-2 mt-1 text-sm"
                             rows={4}
                             placeholder="Текстик"
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
                         />
                     </div>
 
                     <div className="flex justify-start gap-4 pt-2">
                         <button
-                            type="button"
+                            type="submit"
                             className="bg-[#00C8A0] hover:bg-[#00b894] text-white font-semibold px-6 py-2 rounded-md"
                         >
                             Добавить

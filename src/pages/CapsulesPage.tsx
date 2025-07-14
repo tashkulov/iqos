@@ -1,11 +1,55 @@
 import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
 import { useState } from "react";
-import {capsules} from "../capsulesData.ts";
+import {capsules as initialCapsules} from "../capsulesData.ts";
 import CapsuleModal from "../components/modals/CapsuleModal.tsx";
 import MainLayout from "../components/MainLayout.tsx";
+import DeleteModal from "../components/modals/DeleteModal";
+import EditModal from "../components/modals/EditModal";
 
 const CapsulesPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    type Capsule = typeof initialCapsules[number];
+    const [capsules, setCapsules] = useState<Capsule[]>(initialCapsules);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [capsuleToDelete, setCapsuleToDelete] = useState<Capsule | null>(null);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [capsuleToEdit, setCapsuleToEdit] = useState<Capsule | null>(null);
+
+    const handleDeleteClick = (capsule: Capsule) => {
+        setCapsuleToDelete(capsule);
+        setDeleteModalOpen(true);
+    };
+    const handleConfirmDelete = () => {
+        if (capsuleToDelete) {
+            setCapsules(prev => prev.filter(c => c.id !== capsuleToDelete.id));
+            setCapsuleToDelete(null);
+            setDeleteModalOpen(false);
+        }
+    };
+    const handleCloseDeleteModal = () => {
+        setDeleteModalOpen(false);
+        setCapsuleToDelete(null);
+    };
+
+    const handleEditClick = (capsule: Capsule) => {
+        setCapsuleToEdit(capsule);
+        setEditModalOpen(true);
+    };
+    const handleSaveEdit = (values: { name: string; color: string; description: string }) => {
+        if (capsuleToEdit) {
+            setCapsules(prev => prev.map(c =>
+                c.id === capsuleToEdit.id
+                    ? { ...c, ...values }
+                    : c
+            ));
+            setEditModalOpen(false);
+            setCapsuleToEdit(null);
+        }
+    };
+    const handleCloseEditModal = () => {
+        setEditModalOpen(false);
+        setCapsuleToEdit(null);
+    };
 
     return (
         <MainLayout>
@@ -66,12 +110,12 @@ const CapsulesPage = () => {
                                 </td>
                                 <td className="px-4 py-2 text-sm">{capsule.id}</td>
                                 <td className="px-4 py-2">
-                                    <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#00C8B3]">
+                                    <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#00C8B3]" onClick={() => handleEditClick(capsule)}>
                                         <FaPen size={14} />
                                     </button>
                                 </td>
                                 <td className="px-4 py-2">
-                                    <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-red-400">
+                                    <button className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-red-400" onClick={() => handleDeleteClick(capsule)}>
                                         <FaTrash size={14} />
                                     </button>
                                 </td>
@@ -82,6 +126,23 @@ const CapsulesPage = () => {
                 </div>
 
                 {isModalOpen && <CapsuleModal onClose={() => setIsModalOpen(false)} />}
+                <DeleteModal isOpen={deleteModalOpen} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDelete} title="Удалить капсулу" />
+                {capsuleToEdit && (
+                    <EditModal
+                        isOpen={editModalOpen}
+                        onClose={handleCloseEditModal}
+                        onSave={handleSaveEdit}
+                        initialValues={{
+                            name: capsuleToEdit.name,
+                            color: '',
+                            description: capsuleToEdit.description,
+                            avatarUrl: capsuleToEdit.avatar,
+                            avatarUrl2: '',
+                        }}
+                        title="Редактировать капсулу"
+                        showSecondAvatar={true}
+                    />
+                )}
             </div>
         </div>
             </MainLayout>

@@ -1,14 +1,74 @@
 import { FaPlus,  } from "react-icons/fa";
-import {collections} from "../collectionsData.ts";
+import { collections as initialCollections } from "../collectionsData.ts";
+import type { CapsuleCollection } from "../collectionsData.ts";
 import CollectionItem from "../components/CollectionItem.tsx";
 import AddCollectionModal from "../components/modals/AddCollectionModal.tsx";
-import {useState} from "react";
+import { useState } from "react";
 import MainLayout from "../components/MainLayout.tsx";
-
+import DeleteModal from "../components/modals/DeleteModal";
+import EditModal from "../components/modals/EditModal";
 
 
 const CollectionsPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [collections, setCollections] = useState<CapsuleCollection[]>(initialCollections);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [collectionToDelete, setCollectionToDelete] = useState<CapsuleCollection | null>(null);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [collectionToEdit, setCollectionToEdit] = useState<CapsuleCollection | null>(null);
+
+    const handleAddCollection = (data: { name: string; color: string; description: string }) => {
+        setCollections(prev => [
+            {
+                id: Date.now().toString(),
+                name: data.name,
+                description: data.description,
+                capsules: [],
+                expiresAt: "",
+                status: "active",
+                color: data.color,
+            },
+            ...prev,
+        ]);
+    };
+
+    const handleDeleteClick = (collection: CapsuleCollection) => {
+        setCollectionToDelete(collection);
+        setDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (collectionToDelete) {
+            setCollections(prev => prev.filter(c => c.id !== collectionToDelete.id || c.name !== collectionToDelete.name));
+            setCollectionToDelete(null);
+            setDeleteModalOpen(false);
+        }
+    };
+
+    const handleCloseDeleteModal = () => {
+        setDeleteModalOpen(false);
+        setCollectionToDelete(null);
+    };
+
+    const handleEditClick = (collection: CapsuleCollection) => {
+        setCollectionToEdit(collection);
+        setEditModalOpen(true);
+    };
+    const handleSaveEdit = (values: { name: string; color: string; description: string }) => {
+        if (collectionToEdit) {
+            setCollections(prev => prev.map(c =>
+                c.id === collectionToEdit.id && c.name === collectionToEdit.name
+                    ? { ...c, ...values }
+                    : c
+            ));
+            setEditModalOpen(false);
+            setCollectionToEdit(null);
+        }
+    };
+    const handleCloseEditModal = () => {
+        setEditModalOpen(false);
+        setCollectionToEdit(null);
+    };
 
 
     return (
@@ -61,13 +121,27 @@ const CollectionsPage = () => {
                         </thead>
                         <tbody>
                         {collections.map((c) => (
-                            <CollectionItem key={c.name} collection={c}/>
+                            <CollectionItem key={c.id + c.name} collection={c} onDelete={() => handleDeleteClick(c)} onEdit={() => handleEditClick(c)} />
                         ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <AddCollectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <AddCollectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddCollection} />
+            <DeleteModal isOpen={deleteModalOpen} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDelete} title="Удалить коллекцию" />
+            {collectionToEdit && (
+                <EditModal
+                    isOpen={editModalOpen}
+                    onClose={handleCloseEditModal}
+                    onSave={handleSaveEdit}
+                    initialValues={{
+                        name: collectionToEdit.name,
+                        color: collectionToEdit.color,
+                        description: collectionToEdit.description,
+                    }}
+                    title="Редактировать коллекцию"
+                />
+            )}
 
         </div>
             </MainLayout>

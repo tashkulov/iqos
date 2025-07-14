@@ -2,19 +2,25 @@ import { useState } from "react";
 import MainLayout from "../components/MainLayout";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import Map from "../components/Map.tsx";
+interface Location {
+    name: string;
+    type: string;
+    quantity: number;
+    coords: [number, number];
+}
 
-const locations = [
-    { name: "Аэропорт", type: "Ресторан", quantity: 15, coords: [51.2262, 51.3866] },
-    { name: "Тайсинкар", type: "Ресторан", quantity: 23, coords: [51.235, 51.365] },
-    { name: "Астана-хюб", type: "Ресторан", quantity: 42, coords: [51.24, 51.37] },
-    { name: "Шаур", type: "Ресторан", quantity: 29, coords: [51.25, 51.38] },
-    { name: "Ежко", type: "Бар", quantity: 27, coords: [51.22, 51.345] },
-    { name: "Вокзал", type: "Бар", quantity: 36, coords: [51.228, 51.351] },
-    { name: "Гольф-клуб", type: "Магазин", quantity: 5, coords: [51.218, 51.335] },
-    { name: "Бизнес-центр", type: "Магазин", quantity: 13, coords: [51.223, 51.34] },
-    { name: "Торговый центр", type: "Магазин", quantity: 40, coords: [51.215, 51.33] },
-    { name: "Администрация", type: "Магазин", quantity: 26, coords: [51.245, 51.355] },
-    { name: "Университет", type: "Бар", quantity: 33, coords: [51.212, 51.32] },
+const locations: Location[] = [
+    { name: "Аэропорт", type: "Ресторан", quantity: 15, coords: [51.2262, 71.3866] },
+    { name: "Тайсинкар", type: "Ресторан", quantity: 23, coords: [51.235, 71.365] },
+    { name: "Астана-хюб", type: "Ресторан", quantity: 42, coords: [51.24, 71.37] },
+    { name: "Шаур", type: "Ресторан", quantity: 29, coords: [51.25, 71.38] },
+    { name: "Ежко", type: "Бар", quantity: 27, coords: [51.22, 71.345] },
+    { name: "Вокзал", type: "Бар", quantity: 36, coords: [51.228, 71.351] },
+    { name: "Гольф-клуб", type: "Магазин", quantity: 5, coords: [51.218, 71.335] },
+    { name: "Бизнес-центр", type: "Магазин", quantity: 13, coords: [51.223, 71.34] },
+    { name: "Торговый центр", type: "Магазин", quantity: 40, coords: [51.215, 71.33] },
+    { name: "Администрация", type: "Магазин", quantity: 26, coords: [51.245, 71.355] },
+    { name: "Университет", type: "Бар", quantity: 33, coords: [51.212, 71.32] },
 ];
 
 const MapPage = () => {

@@ -1,10 +1,8 @@
-import type {ReactNode} from "react";
-
 interface StatCardProps {
     title: string;
     value: string | number;
     delta: string;
-    icon?: ReactNode;
+    icon?: string; // путь к svg
 }
 
 const StatCard = ({ title, value, delta, icon }: StatCardProps) => {
@@ -18,8 +16,8 @@ const StatCard = ({ title, value, delta, icon }: StatCardProps) => {
                     <div className="text-2xl font-bold text-gray-900 mt-1">{value}</div>
                 </div>
                 {icon && (
-                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 text-xl">
-                        {icon}
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                        <img src={icon} alt={title} className="w-6 h-6" />
                     </div>
                 )}
             </div>

@@ -25,3 +25,12 @@
         @apply bg-[#00d5d5] text-black border-[#00d5d5];
     }
 }
+.react-select__multi-value {
+    @apply rounded-md border border-gray-300 px-2 py-1 text-sm bg-white;
+}
+.react-select__multi-value__label {
+    @apply truncate max-w-[100px];
+}
+.react-select__multi-value__remove {
+    @apply text-gray-500 hover:text-red-500 cursor-pointer;
+}

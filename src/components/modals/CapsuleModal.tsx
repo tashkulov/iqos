@@ -1,16 +1,29 @@
 import React, { useRef, useState } from "react";
-import icon from '../../assets/icon/addCollectionIcon.svg'
+import icon from '../../assets/icon/addCollectionIcon.svg';
+
+type Capsule = {
+    id: string;
+    name: string;
+    description: string;
+    status: "active" | "inactive";
+    color: string;
+    avatar: string;
+    avatar2?: string;
+};
+
+
+
 interface Props {
     onClose: () => void;
+    onAdd: (capsule: Capsule) => void;
 }
 
-const CapsuleModal: React.FC<Props> = ({ onClose }) => {
+const CapsuleModal: React.FC<Props> = ({ onClose, onAdd }) => {
     const previewInputRef = useRef<HTMLInputElement>(null);
     const modelInputRef = useRef<HTMLInputElement>(null);
 
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [modelImage, setModelImage] = useState<string | null>(null);
-
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [color, setColor] = useState("");
@@ -24,11 +37,25 @@ const CapsuleModal: React.FC<Props> = ({ onClose }) => {
         const file = e.target.files?.[0];
         if (file) setModelImage(URL.createObjectURL(file));
     };
-
     const handleSubmit = () => {
-        console.log({ name, description, color, previewImage, modelImage });
+        if (!name || !color || !previewImage) return;
+
+        const newCapsule: Capsule = {
+            id: Date.now().toString(),
+            name,
+            description,
+            color,
+            avatar: previewImage,
+            avatar2: modelImage || "",
+            status: "active" as const,
+        };
+
+
+        onAdd(newCapsule);
         onClose();
     };
+
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center">
@@ -110,24 +137,26 @@ const CapsuleModal: React.FC<Props> = ({ onClose }) => {
                     </select>
 
                     <textarea
-                        placeholder="Яркий вкус..."
+                        placeholder="Описание капсулы..."
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         maxLength={250}
                         rows={4}
                         className="w-full border border-gray-300 rounded-md px-4 py-2"
                     />
+
+
                 </div>
 
-                <div className="mt-6 flex justify-between">
+                <div className="mt-6 flex justify-start gap-4">
                     <button
-                        className="bg-[#00C865] hover:bg-[#00b85e] text-white px-6 py-2 rounded"
+                        className="bg-[#00D1D2] hover:bg-[#00b85e] text-black px-6 py-2 rounded-lg"
                         onClick={handleSubmit}
                     >
                         Добавить
                     </button>
                     <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded"
+                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg"
                         onClick={onClose}
                     >
                         Отмена

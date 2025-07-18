@@ -10,8 +10,10 @@ import {
     Bar,
     CartesianGrid
 } from "recharts";
-import {FaLeaf, FaMoneyBillWave, FaRegClock} from "react-icons/fa6";
 import MainLayout from "../components/MainLayout.tsx";
+import dau from '../assets/icon/dau.svg';
+import mau from '../assets/icon/mau.svg';
+import retenshn from '../assets/icon/retenshn.svg';
 
 const dashboardData = {
     dau: 2250,
@@ -51,9 +53,9 @@ const DashboardPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <StatCard title="DAU" value={dashboardData.dau} delta="+8.5%" icon={<FaLeaf/>}/>
-                    <StatCard title="MAU" value={dashboardData.mau} delta="-1.5%" icon={<FaRegClock/>}/>
-                    <StatCard title="Ретеншн" value={dashboardData.retention} delta="-15%" icon={<FaMoneyBillWave/>}/>
+                    <StatCard title="DAU" value={dashboardData.dau} delta="+8.5%" icon={dau}/>
+                    <StatCard title="MAU" value={dashboardData.mau} delta="-1.5%" icon={mau}/>
+                    <StatCard title="Ретеншн" value={dashboardData.retention} delta="-15%" icon={retenshn}/>
                 </div>
 
 
@@ -87,8 +89,8 @@ const DashboardPage = () => {
                 </div>
             </div>
         </div>
-            </MainLayout>
-);
+        </MainLayout>
+    );
 };
 
 export default DashboardPage;

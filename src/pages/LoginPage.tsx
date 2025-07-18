@@ -1,22 +1,21 @@
 import { FaSignInAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-
+import logo from "../assets/icon/logo.svg"
 const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleLogin = () => {
-        // Здесь может быть логика авторизации
-        // Например: await login(email, password)
-        // А пока — просто редирект на дашборд
+
         navigate("/dashboard");
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#f0ffff] px-4">
             <div className="w-full max-w-sm bg-white shadow-lg overflow-hidden">
-                <div className="bg-[#00C8B3] py-10 text-center">
-                    <h1 className="text-white text-3xl font-semibold tracking-widest">IQOS</h1>
+                <div className="bg-[#00C8B3] p-20 flex justify-center items-center">
+                    <img src={logo} alt="logo"/>
                 </div>
+
 
                 <div className="p-8">
                     <label className="block text-gray-700 text-sm mb-2">
@@ -45,7 +44,7 @@ const LoginPage = () => {
                         onClick={handleLogin}
                         className="w-full flex items-center justify-center gap-2 bg-[#00C865] hover:bg-[#00b85e] text-white font-semibold py-2 rounded-md transition"
                     >
-                        Вход <FaSignInAlt className="text-lg" />
+                        Вход <FaSignInAlt className="text-lg"/>
                     </button>
                 </div>
             </div>

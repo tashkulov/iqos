@@ -1,6 +1,6 @@
-import { FaTrash, FaPen } from "react-icons/fa";
-import image from "../assets/img.png";
-
+import editIcon from "../assets/icon/edit.svg";
+import deleteIcon from "../assets/icon/delete.svg";
+import rewardImg from '../assets/img.png';
 interface Reward {
     id: string;
     title: string;
@@ -10,38 +10,40 @@ interface Reward {
 
 interface Props {
     reward: Reward;
+    onEdit: () => void;
+    onDelete: () => void;
 }
 
-const RewardCard = ({ reward }: Props) => {
+const RewardCard = ({ reward, onEdit, onDelete }: Props) => {
     return (
-        <div className="relative bg-white rounded-xl shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-md">
+        <div className="relative group w-[420px] h-[350px] bg-white rounded-2xl shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-md">
             <button
-                className="absolute top-4 left-4 bg-[#F6F9FF] p-2 rounded shadow-sm hover:shadow-md transition"
-                title="Удалить"
+                className="absolute top-2 left-2 bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md opacity-0 group-hover:opacity-100 transition"
+                onClick={onEdit}
+                title="Редактировать награду"
             >
-                <FaTrash size={14} className="text-[#91A1C1]" />
+                <img src={editIcon} alt="edit" />
             </button>
 
-            {/* Кнопка редактирования */}
             <button
-                className="absolute top-4 right-4 bg-[#F6F9FF] p-2 rounded shadow-sm hover:shadow-md transition"
-                title="Редактировать"
+                className="absolute top-2 right-2 bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md opacity-0 group-hover:opacity-100 transition"
+                onClick={onDelete}
+                title="Удалить награду"
             >
-                <FaPen size={14} className="text-[#91A1C1]" />
+                <img src={deleteIcon} alt="delete" />
             </button>
 
             <img
-                src={image}
+                src={rewardImg}
                 alt={reward.title}
-                className="w-[100px] h-[100px] object-contain mb-4"
+                className="w-[160px] h-[160px] object-contain mb-4"
             />
 
             <h3 className="text-[18px] font-semibold text-[#222E3A] mb-2">
                 {reward.title}
             </h3>
 
-            {/* Описание */}
-            <p className="text-sm text-[#8492A6] max-w-xs leading-relaxed">
+            <p className="text-sm text-[#8492A6] leading-relaxed max-w-[320px]">
                 {reward.description}
             </p>
         </div>

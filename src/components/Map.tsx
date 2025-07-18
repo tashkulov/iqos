@@ -1,12 +1,8 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import geoIcon from '../assets/icon/geo.svg';
 
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: new URL("leaflet/dist/images/marker-icon-2x.png", import.meta.url).toString(),
-    iconUrl: new URL("leaflet/dist/images/marker-icon.png", import.meta.url).toString(),
-    shadowUrl: new URL("leaflet/dist/images/marker-shadow.png", import.meta.url).toString(),
-});
 interface Location {
     name: string;
     type: string;
@@ -17,6 +13,13 @@ interface Location {
 interface MapProps {
     locations: Location[];
 }
+
+const customGeoIcon = new L.Icon({
+    iconUrl: geoIcon,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+});
 
 const Map: React.FC<MapProps> = ({ locations }) => {
     return (
@@ -31,7 +34,7 @@ const Map: React.FC<MapProps> = ({ locations }) => {
                 attribution="&copy; OpenStreetMap contributors"
             />
             {locations.map((loc) => (
-                <Marker key={loc.name} position={loc.coords}>
+                <Marker key={loc.name} position={loc.coords} icon={customGeoIcon}>
                     <Popup>
                         <strong>{loc.name}</strong>
                         <br />

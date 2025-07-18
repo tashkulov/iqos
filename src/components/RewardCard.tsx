@@ -16,7 +16,7 @@ interface Props {
 
 const RewardCard = ({ reward, onEdit, onDelete }: Props) => {
     return (
-        <div className="relative group w-[420px] h-[350px] bg-white rounded-2xl shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-md">
+        <div className="relative group w-full h-[350px] bg-white rounded-2xl shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-md">
             <button
                 className="absolute top-2 left-2 bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md opacity-0 group-hover:opacity-100 transition"
                 onClick={onEdit}

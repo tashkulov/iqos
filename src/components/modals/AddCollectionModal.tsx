@@ -2,6 +2,7 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
 import iconColl from "../../assets/icon/addCollectionIcon.svg";
+import CustomMultiSelect from "../CustomMultiSelect.tsx";
 
 interface Props {
     isOpen: boolean;
@@ -48,9 +49,6 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
         { value: "#ccbae5", label: "Фиолетовый" },
         { value: "#84edea", label: "Бирюзовый" },
     ];
-    const selectedCapsules = capsuleOptions.filter((c) =>
-        capsules.includes(c.value)
-    );
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center p-4">
@@ -85,7 +83,7 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                             </div>
 
                             {/* Статус */}
-                            <div >
+                            <div>
                                 <label className="text-sm text-[#8492A6] block mb-2">Статус</label>
                                 <div className="flex gap-2">
                                     <button
@@ -147,7 +145,7 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                         </div>
                         {/* Описание */}
                         <div>
-                        <label className="text-sm text-[#8492A6] block mb-1">
+                            <label className="text-sm text-[#8492A6] block mb-1">
                                 Описание (макс. 250 символов)
                             </label>
                             <textarea
@@ -186,40 +184,19 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                             <label className="text-sm text-[#8492A6] block mb-1">
                                 Капсулы (от N до Y)
                             </label>
-                            <Select
+                            <CustomMultiSelect
                                 options={capsuleOptions}
-                                isMulti
+                                selected={capsuleOptions.filter(opt => capsules.includes(opt.value))}
+                                onChange={(selected) => setCapsules(selected.map(s => s.value))}
                                 placeholder="Выберите несколько"
-                                value={selectedCapsules}
-                                onChange={(selected) =>
-                                    setCapsules(selected ? selected.map((s) => s.value) : [])
-                                }
-                                classNamePrefix="capsule-select"
-                                styles={{
-                                    control: (base) => ({
-                                        ...base,
-                                        minHeight: "42px",
-                                        fontSize: "14px",
-                                    }),
-                                    multiValue: (base) => ({
-                                        ...base,
-                                        backgroundColor: "#f5f5f5",
-                                    }),
-                                    multiValueLabel: (base) => ({
-                                        ...base,
-                                        color: "#333",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        maxWidth: "100px",
-                                    }),
-                                }}
                             />
+
                         </div>
 
                         {/* Цвет */}
-
+                        {/* Здесь оставляй следующий блок */}
                     </div>
+
                 </form>
             </div>
         </div>

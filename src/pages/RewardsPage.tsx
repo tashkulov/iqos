@@ -3,6 +3,7 @@ import MainLayout from "../components/MainLayout.tsx";
 import DeleteModal from "../components/modals/DeleteModal";
 import EditModal from "../components/modals/EditModal";
 import { useState } from "react";
+import type {Option} from "../components/CustomMultiSelect.tsx";
 
 const rewards = [
     {
@@ -28,7 +29,10 @@ const RewardsPage = () => {
         qr?: string;
         condition?: string;
         capsuleOrCollection?: string;
+        capsules?: Option[];
+        collections?: Option[];
     };
+
 
     const [rewardsList, setRewardsList] = useState<Reward[]>(rewards);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -94,6 +98,8 @@ const RewardsPage = () => {
         avatarUrl2?: string;
         condition?: string;
         capsuleOrCollection?: string;
+        capsules?: Option[];
+        collections?: Option[];
     }) => {
         const newReward: Reward = {
             id: crypto.randomUUID(),
@@ -104,8 +110,11 @@ const RewardsPage = () => {
             qr: values.avatarUrl2 || "",
             condition: values.condition,
             capsuleOrCollection: values.capsuleOrCollection,
+            capsules: values.capsules || [],
+            collections: values.collections || [],
         };
         setRewardsList(prev => [newReward, ...prev]);
+        console.log("New reward:", values); // <== Добавь это
         setCreateModalOpen(false);
     };
 
@@ -177,6 +186,8 @@ const RewardsPage = () => {
                         avatarUrl: "",
                         avatarUrl2: "",
                         condition: "",
+                        capsules: [],
+                        collections: [],
                         capsuleOrCollection: "",
                     }}
                     title="Добавить награду"

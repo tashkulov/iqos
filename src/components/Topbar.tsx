@@ -1,5 +1,5 @@
 import { FaBars } from "react-icons/fa";
-
+import ava from '../assets/img_2.png'
 const Topbar = () => {
     return (
         <div className="flex justify-between items-center px-6 py-4 bg-[#f0ffff] border-b border-gray-200">
@@ -14,9 +14,11 @@ const Topbar = () => {
             </div>
 
             <img
-                src="/avatars/1.png"
+                src={ava}
                 alt="User avatar"
-                className="w-10 h-10 rounded-full object-cover"
+                height={48}
+                width={48}
+                className=" rounded-full object-cover"
             />
         </div>
     );

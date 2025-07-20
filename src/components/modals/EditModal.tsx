@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import iconColl from "../../assets/icon/addCollectionIcon.svg";
 import downloadIcon from "../../assets/icon/downloadIcon.svg";
+import CustomMultiSelect, { type Option } from "../CustomMultiSelect.tsx";
 
 interface Props {
     isOpen: boolean;
@@ -14,6 +15,8 @@ interface Props {
         avatarUrl2?: string;
         condition?: string;
         capsuleOrCollection?: string;
+        capsules?: Option[];
+        collections?: Option[];
     }) => void;
     initialValues: {
         name: string;
@@ -22,6 +25,8 @@ interface Props {
         avatarUrl?: string;
         avatarUrl2?: string;
         condition?: string;
+        capsules?: Option[];
+        collections?: Option[];
         capsuleOrCollection?: string;
     };
     title: string;
@@ -30,7 +35,18 @@ interface Props {
     labelSecondAvatar?: string;
 }
 
-const   EditModal: React.FC<Props> = ({
+const capsuleOptions: Option[] = [
+    { value: "capsule1", label: "Капсула длинная 1" },
+    { value: "capsule2", label: "Капсула длинная 2" },
+    { value: "capsule3", label: "Капсула длинная 3" },
+];
+
+const collectionOptions: Option[] = [
+    { value: "collection1", label: "Коллекция A" },
+    { value: "collection2", label: "Коллекция B" },
+];
+
+const EditModal: React.FC<Props> = ({
                                         isOpen,
                                         onClose,
                                         onSave,
@@ -38,39 +54,49 @@ const   EditModal: React.FC<Props> = ({
                                         title,
                                         id,
                                     }) => {
-    const [name, setName] = React.useState(initialValues.name);
-    const [color, setColor] = React.useState(initialValues.color);
-    const [description, setDescription] = React.useState(initialValues.description);
-    const [avatarUrl, setAvatarUrl] = React.useState(initialValues.avatarUrl || "");
-    const [avatarUrl2, setAvatarUrl2] = React.useState(initialValues.avatarUrl2 || "");
-    const [condition, setCondition] = React.useState(initialValues.condition || "");
-    const [capsuleOrCollection, setCapsuleOrCollection] = React.useState(initialValues.capsuleOrCollection || "");
+    const [name, setName] = useState(initialValues.name);
+    const [color, setColor] = useState(initialValues.color || "");
+    const [description, setDescription] = useState(initialValues.description);
+    const [avatarUrl, setAvatarUrl] = useState(initialValues.avatarUrl || "");
+    const [avatarUrl2, setAvatarUrl2] = useState(initialValues.avatarUrl2 || "");
+    const [condition, setCondition] = useState(initialValues.condition || "");
+    const [capsuleOrCollection, setCapsuleOrCollection] = useState(initialValues.capsuleOrCollection || "");
+    const [selectedCapsules, setSelectedCapsules] = useState<Option[]>(initialValues.capsules || []);
+    const [selectedCollections, setSelectedCollections] = useState<Option[]>(initialValues.collections || []);
 
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     React.useEffect(() => {
         setName(initialValues.name);
-        setColor(initialValues.color);
+        setColor(initialValues.color || "");
         setDescription(initialValues.description);
         setAvatarUrl(initialValues.avatarUrl || "");
         setAvatarUrl2(initialValues.avatarUrl2 || "");
         setCondition(initialValues.condition || "");
         setCapsuleOrCollection(initialValues.capsuleOrCollection || "");
+        setSelectedCapsules(initialValues.capsules || []);
+        setSelectedCollections(initialValues.collections || []);
     }, [initialValues]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name || !color) return;
-        onSave({
-            name,
-            color,
-            description,
+
+        const payload = {
+            name: name.trim() || "Без названия",
+            color: color || "#fbc748", // например, оранжевый по умолчанию
+            description: description.trim() || "Описание отсутствует",
             avatarUrl,
             avatarUrl2,
-            condition,
-            capsuleOrCollection,
-        });
+            condition: condition.trim() || "Без условий",
+            capsuleOrCollection: capsuleOrCollection || "capsule1",
+            capsules: selectedCapsules.length ? selectedCapsules : [capsuleOptions[0]],
+            collections: selectedCollections.length ? selectedCollections : [collectionOptions[0]],
+        };
+
+        onSave(payload);
     };
+
+
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -167,28 +193,26 @@ const   EditModal: React.FC<Props> = ({
                     />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <select
-                            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
-                            value={capsuleOrCollection}
-                            onChange={(e) => setCapsuleOrCollection(e.target.value)}
-                        >
-                            <option value="">Выберите капсулу</option>
-                            <option value="Капсула 1">Капсула 1</option>
-                            <option value="Капсула 2">Капсула 2</option>
-                        </select>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-600 mb-1">Капсулы на локации</label>
+                            <CustomMultiSelect
+                                options={capsuleOptions}
+                                selected={selectedCapsules}
+                                onChange={setSelectedCapsules}
+                                placeholder="Выберите несколько капсул"
+                            />
+                        </div>
 
-                        <select
-                            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
-                            value={color}
-                            onChange={(e) => setColor(e.target.value)}
-                        >
-                            <option value="">Выберите цвет</option>
-                            <option value="#fbc748">Оранжевый</option>
-                            <option value="#ccbae5">Фиолетовый</option>
-                            <option value="#84edea">Бирюзовый</option>
-                        </select>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-600 mb-1">Коллекции на локации</label>
+                            <CustomMultiSelect
+                                options={collectionOptions}
+                                selected={selectedCollections}
+                                onChange={setSelectedCollections}
+                                placeholder="Выберите несколько коллекций"
+                            />
+                        </div>
                     </div>
-
 
                     <div className="flex justify-start gap-4 pt-4">
                         <button
@@ -197,6 +221,7 @@ const   EditModal: React.FC<Props> = ({
                         >
                             Добавить
                         </button>
+
                         <button
                             type="button"
                             onClick={onClose}

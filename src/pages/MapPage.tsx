@@ -12,6 +12,7 @@ interface Location {
     coords: [number, number];
 }
 
+
 const MapPage = () => {
     const [locations, setLocations] = useState<Location[]>([
         { name: "Аэропорт", type: "Ресторан", quantity: 15, coords: [51.2262, 71.3866] },
@@ -26,7 +27,7 @@ const MapPage = () => {
         { name: "Администрация", type: "Магазин", quantity: 26, coords: [51.245, 71.355] },
         { name: "Университет", type: "Бар", quantity: 33, coords: [51.212, 71.32] },
     ]);
-    const [types, setTypes] = useState<string[]>([
+     const [types, setTypes] = useState<string[]>([
         "Ресторан", "Кафе", "Бистро", "Стейкхаус", "Пиццерия", "Суши-бар", "Вегетарианское заведение"
     ]);
 

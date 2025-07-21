@@ -11,14 +11,12 @@ const rewards = [
         title: "Яндекс.Станция",
         description:
             "Умная колонка с голосовым помощником, которая позволяет управлять устройствами умного дома, слушать музыку и получать информацию в режиме реального времени.",
-        image: "/rewards/yandex_station.png",
     },
     {
         id: "2",
         title: "Яндекс.Станция",
         description:
             "Умная колонка с голосовым помощником, которая позволяет управлять устройствами умного дома, слушать музыку и получать информацию в режиме реального времени.",
-        image: "/rewards/yandex_station.png",
     },
 ];
 
@@ -28,6 +26,7 @@ const RewardsPage = () => {
         color?: string;
         qr?: string;
         condition?: string;
+        image?: string;
         capsuleOrCollection?: string;
         capsules?: Option[];
         collections?: Option[];

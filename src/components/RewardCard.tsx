@@ -5,7 +5,7 @@ interface Reward {
     id: string;
     title: string;
     description: string;
-    image: string;
+    image?: string;
 }
 
 interface Props {
@@ -34,7 +34,7 @@ const RewardCard = ({ reward, onEdit, onDelete }: Props) => {
             </button>
 
             <img
-                src={rewardImg}
+                src={reward.image ||  rewardImg}
                 alt={reward.title}
                 className="w-[160px] h-[160px] object-contain mb-4"
             />

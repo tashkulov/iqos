@@ -109,7 +109,7 @@ const CapsulesPage = () => {
                                 <th className="px-4 py-2">Аватар</th>
                                 <th className="px-4 py-2">Название</th>
                                 <th className="px-4 py-2">Описание</th>
-                                <th className="px-4 py-2">Статус</th>
+                                <th className="px-4 py-2">Цвет</th>
                                 <th className="px-4 py-2">ID</th>
                                 <th className="px-4 py-2">Редактировать</th>
                                 <th className="px-4 py-2">Удалить</th>
@@ -126,13 +126,7 @@ const CapsulesPage = () => {
                                     </td>
                                     <td className="px-4 py-2 text-sm">{capsule.name}</td>
                                     <td className="px-4 py-2 text-sm text-gray-600">{capsule.description}</td>
-                                    <td className="px-4 py-2">
-                                            <span
-                                                className={`text-xs px-3 py-1 rounded-full ${capsule.status === "active" ? "bg-[#00D0CA]" : "bg-red-500"} text-white`}
-                                            >
-                                                {capsule.status === "active" ? "Активна" : "Не активна"}
-                                            </span>
-                                    </td>
+                                    <td className="px-4 py-2">{capsule.color}</td>
                                     <td className="px-4 py-2 text-sm">{capsule.id}</td>
 
 

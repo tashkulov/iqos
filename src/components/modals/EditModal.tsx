@@ -3,6 +3,8 @@ import { FaTimes } from "react-icons/fa";
 import iconColl from "../../assets/icon/addCollectionIcon.svg";
 import downloadIcon from "../../assets/icon/downloadIcon.svg";
 import CustomMultiSelect, { type Option } from "../CustomMultiSelect.tsx";
+import {capsules} from "../../capsulesData.ts";
+import {collections} from "../../collectionsData.ts";
 
 interface Props {
     isOpen: boolean;
@@ -35,16 +37,15 @@ interface Props {
     labelSecondAvatar?: string;
 }
 
-const capsuleOptions: Option[] = [
-    { value: "capsule1", label: "Капсула длинная 1" },
-    { value: "capsule2", label: "Капсула длинная 2" },
-    { value: "capsule3", label: "Капсула длинная 3" },
-];
+ const capsuleOptions: Option[] = capsules.map((capsule) => ({
+    value: capsule.id,
+    label: capsule.name,
+}));
 
-const collectionOptions: Option[] = [
-    { value: "collection1", label: "Коллекция A" },
-    { value: "collection2", label: "Коллекция B" },
-];
+ const collectionOptions: Option[] = collections.map(col => ({
+    value: col.id,
+    label: col.name,
+}));
 
 const EditModal: React.FC<Props> = ({
                                         isOpen,
@@ -63,6 +64,15 @@ const EditModal: React.FC<Props> = ({
     const [capsuleOrCollection, setCapsuleOrCollection] = useState(initialValues.capsuleOrCollection || "");
     const [selectedCapsules, setSelectedCapsules] = useState<Option[]>(initialValues.capsules || []);
     const [selectedCollections, setSelectedCollections] = useState<Option[]>(initialValues.collections || []);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            setAvatarUrl(url);
+            setAvatarFile(file);
+        }
+    };
 
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -87,6 +97,8 @@ const EditModal: React.FC<Props> = ({
             description: description.trim() || "Описание отсутствует",
             avatarUrl,
             avatarUrl2,
+            avatarFile,
+
             condition: condition.trim() || "Без условий",
             capsuleOrCollection: capsuleOrCollection || "capsule1",
             capsules: selectedCapsules.length ? selectedCapsules : [capsuleOptions[0]],
@@ -98,13 +110,7 @@ const EditModal: React.FC<Props> = ({
 
 
 
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const url = URL.createObjectURL(file);
-            setAvatarUrl(url);
-        }
-    };
+
 
     if (!isOpen) return null;
 

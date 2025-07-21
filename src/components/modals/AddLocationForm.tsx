@@ -2,6 +2,8 @@ import React, {useState, useRef, useEffect} from "react";
 import { BsQrCode } from "react-icons/bs";
 import preview from '../../assets/img_1.png';
 import CustomMultiSelect, {type Option} from "../CustomMultiSelect.tsx";
+import {capsules} from "../../capsulesData.ts";
+import {collections} from "../../collectionsData.ts";
 
 const AddLocationForm = ({
                              onAdd,
@@ -24,20 +26,24 @@ const AddLocationForm = ({
         { value: "Ресторан", label: "Ресторан" },
         { value: "Кафе", label: "Кафе" },
         { value: "Бистро", label: "Бистро" },
+        { value: "Стейкхаус", label: "Стейкхаус" },
+        { value: "Пиццерия", label: "Пиццерия" },
+        { value: "Суши-бар", label: "Суши-бар" },
+        { value: "Вегетарианское заведение", label: "Вегетарианское заведение" },
     ];
-    const capsuleOptions: Option[] = [
-        { value: "capsule1", label: "Капсула длинная 1" },
-        { value: "capsule2", label: "Капсула длинная 2" },
-        { value: "capsule3", label: "Капсула длинная 3" },
-    ];
+    const capsuleOptions: Option[] = capsules.map((capsule) => ({
+        value: capsule.id,
+        label: capsule.name,
+    }));
 
-    const collectionOptions: Option[] = [
-        { value: "collection1", label: "Коллекция A" },
-        { value: "collection2", label: "Коллекция B" },
-        { value: "collection3", label: "Коллекция C" },
-    ];
+    const collectionOptions: Option[] = collections.map(col => ({
+        value: col.id,
+        label: col.name,
+    }));
+
     const [selectedCapsules, setSelectedCapsules] = useState<Option[]>([]);
     const [selectedCollections, setSelectedCollections] = useState<Option[]>([]);
+    const [selectedType, setSelectedType] = useState<{ value: string; label: string } | null>(null);
 
     const validate = () => {
         const newErrors: typeof errors = {};
@@ -136,14 +142,29 @@ const AddLocationForm = ({
 
                 <div>
                     <label
-                        className={`block text-sm font-medium mb-1 ${errors.types ? 'text-red-500' : 'text-gray-600'}`}>Тип</label>
-                    <CustomMultiSelect
-                        options={locationOptions}
-                        selected={types}
-                        onChange={setTypes}
-                        placeholder="Выберите несколько"
-                    />
+                        className={`block text-sm font-medium mb-1 ${errors.types ? 'text-red-500' : 'text-gray-600'}`}
+                    >
+                        Тип
+                    </label>
+                    <select
+                        className={`w-full border rounded-md px-3 py-2 text-sm ${
+                            errors.types ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        value={selectedType?.value || ""}
+                        onChange={(e) => {
+                            const selected = locationOptions.find((option) => option.value === e.target.value);
+                            setSelectedType(selected || null);
+                        }}
+                    >
+                        <option value="" disabled>Выберите тип</option>
+                        {locationOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
                 </div>
+
 
                 <div>
                     <label

@@ -2,7 +2,8 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
 import iconColl from "../../assets/icon/addCollectionIcon.svg";
-import CustomMultiSelect from "../CustomMultiSelect.tsx";
+import CustomMultiSelect, {type Option} from "../CustomMultiSelect.tsx";
+import {capsules} from "../../capsulesData.ts";
 
 interface Props {
     isOpen: boolean;
@@ -16,24 +17,20 @@ interface Props {
     }) => void;
 }
 
-const capsuleOptions = [
-    { value: "Капсула длинная 1", label: "Капсула длинная 1" },
-    { value: "Капсула длинная 2", label: "Капсула длинная 2" },
-    { value: "Капсула длинная 3", label: "Капсула длинная 3" },
-    { value: "Капсула длинная 4", label: "Капсула длинная 4" },
-    { value: "Капсула длинная 5", label: "Капсула длинная 5" },
-    { value: "Капсула длинная 6", label: "Капсула длинная 6" },
-    { value: "Капсула длинная 7", label: "Капсула длинная 7" },
-];
+const capsuleOptions: Option[] = capsules.map((capsule) => ({
+    value: capsule.id,
+    label: capsule.name,
+}));
+
 const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
     const [name, setName] = React.useState("");
     const [color, setColor] = React.useState("#ccbae5");
     const [description, setDescription] = React.useState("");
     const [status, setStatus] = React.useState(true);
     const [capsules, setCapsules] = React.useState<string[]>([
-        "Капсула длинная 1",
-        "Капсула длинная 2",
-        "Капсула длинная 3",
+        "Светлый путь",
+        "Тайна леса",
+        "Звёздный вечер",
     ]);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -63,11 +60,9 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                 <h2 className="text-2xl font-semibold mb-6">Добавить коллекцию</h2>
 
                 <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-10">
-                    {/* Левая часть */}
 
 
                     <div className="flex-1 flex flex-col gap-6">
-                        {/* Аватар */}
                         <div className={'flex flex-col md:flex-row gap-6'}>
                             <div className="flex gap-4 items-center">
                                 <img src={iconColl} alt="avatar" className="w-16 h-16 rounded-full"/>
@@ -82,7 +77,6 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                                 </div>
                             </div>
 
-                            {/* Статус */}
                             <div>
                                 <label className="text-sm text-[#8492A6] block mb-2">Статус</label>
                                 <div className="flex gap-2">
@@ -143,7 +137,6 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                             </div>
 
                         </div>
-                        {/* Описание */}
                         <div>
                             <label className="text-sm text-[#8492A6] block mb-1">
                                 Описание (макс. 250 символов)

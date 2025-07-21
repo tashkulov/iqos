@@ -47,7 +47,7 @@ interface Props {
     label: col.name,
 }));
 
-const EditModal: React.FC<Props> = ({
+const   EditModal: React.FC<Props> = ({
                                         isOpen,
                                         onClose,
                                         onSave,
@@ -172,50 +172,69 @@ const EditModal: React.FC<Props> = ({
 
                 {/* Form */}
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
-                        placeholder="Название (макс. 100 символов)"
-                        maxLength={100}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Название (макс. 100 символов)
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
+                            placeholder="Яркий вкус..."
+                            maxLength={100}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
 
-                    <textarea
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm resize-none"
-                        placeholder="Описание (макс. 250 символов)"
-                        maxLength={250}
-                        rows={3}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Описание (макс. 250 символов)
+                        </label>
+                        <textarea
+                            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm resize-none"
+                            placeholder="Яркий вкус..."
+                            maxLength={250}
+                            rows={3}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
 
-                    <input
-                        type="text"
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
-                        placeholder="Условие получения награды..."
-                        value={condition}
-                        onChange={(e) => setCondition(e.target.value)}
-                    />
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Условие получения
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
+                            placeholder="Текст с условием получения награды..."
+                            value={condition}
+                            onChange={(e) => setCondition(e.target.value)}
+                        />
+                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">Капсулы на локации</label>
+                            <label className="block text-sm text-gray-600 mb-1">
+                                Капсулы на награду
+                            </label>
                             <CustomMultiSelect
                                 options={capsuleOptions}
                                 selected={selectedCapsules}
                                 onChange={setSelectedCapsules}
-                                placeholder="Выберите несколько капсул"
+                                placeholder="Выберите несколько"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">Коллекции на локации</label>
+                            <label className="block text-sm text-gray-600 mb-1">
+                                Коллекции для награды
+                            </label>
                             <CustomMultiSelect
                                 options={collectionOptions}
                                 selected={selectedCollections}
                                 onChange={setSelectedCollections}
-                                placeholder="Выберите несколько коллекций"
+                                placeholder="Выберите несколько"
                             />
                         </div>
                     </div>
@@ -237,6 +256,7 @@ const EditModal: React.FC<Props> = ({
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     );

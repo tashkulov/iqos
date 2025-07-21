@@ -1,33 +1,32 @@
 import React, { useRef, useState } from "react";
-import icon from '../../assets/icon/addCollectionIcon.svg';
+import icon from "../../assets/icon/addCollectionIcon.svg";
 
 type Capsule = {
     id: string;
     name: string;
     description: string;
-    status: "active" | "inactive";
     color: string;
     avatar: string;
     avatar2?: string;
 };
 
-
-
 interface Props {
+    capsule: Capsule;
     onClose: () => void;
-    onAdd: (capsule: Capsule) => void;
+    onSave: (capsule: Capsule) => void;
 }
 
-const CapsuleModal: React.FC<Props> = ({ onClose, onAdd }) => {
+const EditCapsuleModal: React.FC<Props> = ({ capsule, onClose, onSave }) => {
     const previewInputRef = useRef<HTMLInputElement>(null);
     const modelInputRef = useRef<HTMLInputElement>(null);
 
-    const [previewImage, setPreviewImage] = useState<string | null>(null);
-    const [modelImage, setModelImage] = useState<string | null>(null);
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [color, setColor] = useState("");
+    const [previewImage, setPreviewImage] = useState<string>(capsule.avatar);
+    const [modelImage, setModelImage] = useState<string | null>(capsule.avatar2 ?? null);
+    const [name, setName] = useState(capsule.name);
+    const [description, setDescription] = useState(capsule.description);
+    const [color, setColor] = useState(capsule.color);
 
+    console.log(color)
     const handlePreviewUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) setPreviewImage(URL.createObjectURL(file));
@@ -37,25 +36,22 @@ const CapsuleModal: React.FC<Props> = ({ onClose, onAdd }) => {
         const file = e.target.files?.[0];
         if (file) setModelImage(URL.createObjectURL(file));
     };
+
     const handleSubmit = () => {
         if (!name || !color || !previewImage) return;
 
-        const newCapsule: Capsule = {
-            id: Date.now().toString(),
+        const updatedCapsule: Capsule = {
+            ...capsule,
             name,
             description,
             color,
             avatar: previewImage,
             avatar2: modelImage || "",
-            status: "active" as const,
         };
 
-
-        onAdd(newCapsule);
+        onSave(updatedCapsule);
         onClose();
     };
-
-
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center">
@@ -67,50 +63,62 @@ const CapsuleModal: React.FC<Props> = ({ onClose, onAdd }) => {
                     ×
                 </button>
 
-                <h2 className="text-lg font-semibold mb-4">Добавить капсулу</h2>
+                <h2 className="text-lg font-semibold mb-4">Редактировать капсулу</h2>
 
                 <div className="flex items-start gap-8 mb-6">
-                    <div className="flex flex-col items-center">
+
+                    <div className="flex flex-row items-center gap-2">
                         <img
                             src={previewImage || icon}
-                            className="w-16 h-16 rounded-full object-cover mb-2"
                             alt="preview"
+                            className="w-20 h-20 rounded-full object-cover mb-2"
                         />
-                        <button
-                            className="bg-[#00C865] hover:bg-[#00b85e] text-white px-4 py-1 rounded"
-                            onClick={() => previewInputRef.current?.click()}
-                        >
-                            Загрузить Превью
-                        </button>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref={previewInputRef}
-                            className="hidden"
-                            onChange={handlePreviewUpload}
-                        />
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">Превью капсулы</p>
+                            <button
+                                type="button"
+                                className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1.5 rounded"
+                                onClick={() => previewInputRef.current?.click()}
+                            >
+                                Загрузить Превью
+                            </button>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={previewInputRef}
+                                className="hidden"
+                                onChange={handlePreviewUpload}
+                            />
+                        </div>
                     </div>
 
-                    <div className="flex flex-col items-center">
+
+                    <div className="flex flex-row items-center gap-2">
                         <img
                             src={modelImage || icon}
-                            className="w-16 h-16 rounded-full object-cover mb-2"
                             alt="3d model"
+                            className="w-20 h-20 rounded-full object-cover mb-2"
                         />
-                        <button
-                            className="bg-[#00C865] hover:bg-[#00b85e] text-white px-4 py-1 rounded"
-                            onClick={() => modelInputRef.current?.click()}
-                        >
-                            Загрузить 3D модель
-                        </button>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref={modelInputRef}
-                            className="hidden"
-                            onChange={handleModelUpload}
-                        />
+                        <div>
+                            <p className="text-xs text-gray-500 mb-1">3D Модель</p>
+                            <button
+                                type="button"
+                                className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1.5 rounded"
+                                onClick={() => modelInputRef.current?.click()}
+                            >
+                                Загрузить 3D модель
+                            </button>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={modelInputRef}
+                                className="hidden"
+                                onChange={handleModelUpload}
+                            />
+                        </div>
                     </div>
+
+
                 </div>
 
                 <div className="space-y-4">
@@ -161,12 +169,13 @@ const CapsuleModal: React.FC<Props> = ({ onClose, onAdd }) => {
                     </div>
                 </div>
 
+
                 <div className="mt-6 flex justify-start gap-4">
                     <button
                         className="bg-[#00D1D2] hover:bg-[#00b85e] text-black px-6 py-2 rounded-lg"
                         onClick={handleSubmit}
                     >
-                        Добавить
+                        Сохранить
                     </button>
                     <button
                         className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg"
@@ -180,4 +189,4 @@ const CapsuleModal: React.FC<Props> = ({ onClose, onAdd }) => {
     );
 };
 
-export default CapsuleModal;
+export default EditCapsuleModal;

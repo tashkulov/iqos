@@ -4,7 +4,7 @@ import { capsules as initialCapsules } from "../capsulesData.ts";
 import CapsuleModal from "../components/modals/CapsuleModal.tsx";
 import MainLayout from "../components/MainLayout.tsx";
 import DeleteModal from "../components/modals/DeleteModal";
-import EditModal from "../components/modals/EditModal";
+import EditCapsuleModal from "../components/modals/EditCapsuleModal.tsx";
 
 const CapsulesPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +16,7 @@ const CapsulesPage = () => {
     const [capsules, setCapsules] = useState<Capsule[]>(initialCapsules);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [capsuleToDelete, setCapsuleToDelete] = useState<Capsule | null>(null);
-    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [_, setEditModalOpen] = useState(false);
     const [capsuleToEdit, setCapsuleToEdit] = useState<Capsule | null>(null);
 
     const handleDeleteClick = (capsule: Capsule) => {
@@ -165,20 +165,13 @@ const CapsulesPage = () => {
                         title="Удалить капсулу"
                     />
                     {capsuleToEdit && (
-                        <EditModal
-                            isOpen={editModalOpen}
+                        <EditCapsuleModal
+                            capsule={capsuleToEdit}
                             onClose={handleCloseEditModal}
                             onSave={handleSaveEdit}
-                            initialValues={{
-                                name: capsuleToEdit.name,
-                                description: capsuleToEdit.description,
-                                avatarUrl: capsuleToEdit.avatar,
-                                avatarUrl2: capsuleToEdit.avatar2 ?? "",
-                            }}
-                            title="Редактировать капсулу"
                         />
-
                     )}
+
                 </div>
             </div>
         </MainLayout>

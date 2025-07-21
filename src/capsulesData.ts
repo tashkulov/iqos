@@ -5,7 +5,7 @@ export const capsules = [
         name: "Светлый путь",
         description: "Каждая капсула содержит табачные смеси",
         avatar: icon,
-        color: "Красный",  // заменено на цвет
+        color: "Красный",
     },
     {
         id: "67890",

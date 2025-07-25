@@ -35,7 +35,7 @@ const CollectionsPage = () => {
     }, []);
 
     const handleAddCollection = (data: { name: string; color: string; description: string }) => {
-        const newCollection = {
+        const newCollection: CapsuleCollection = {
             id: Date.now().toString(),
             name: data.name,
             description: data.description,

@@ -24,8 +24,8 @@ const customGeoIcon = new L.Icon({
 const Map: React.FC<MapProps> = ({ locations }) => {
     return (
         <MapContainer
-            center={[51.235, 51.35]}
-            zoom={13}
+            center={[51.1694, 71.4491]} // Астана, Казахстан
+            zoom={11}
             style={{ width: "100%", height: "100%" }}
             attributionControl={false}
         >

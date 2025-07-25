@@ -3,7 +3,8 @@ import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
 import iconColl from "../../assets/icon/addCollectionIcon.svg";
 import CustomMultiSelect, {type Option} from "../CustomMultiSelect.tsx";
-import {capsules} from "../../capsulesData.ts";
+import {getCapsules} from "../../utils/capsulesStorage.ts";
+import type {CapsuleCollection} from "../../collectionsData.ts";
 
 interface Props {
     isOpen: boolean;
@@ -17,10 +18,6 @@ interface Props {
     }) => void;
 }
 
-const capsuleOptions: Option[] = capsules.map((capsule) => ({
-    value: capsule.id,
-    label: capsule.name,
-}));
 
 const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
     const [name, setName] = React.useState("");
@@ -32,12 +29,35 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
         "Тайна леса",
         "Звёздный вечер",
     ]);
+    const [capsuleOptions, setCapsuleOptions] = React.useState<Option[]>([]);
+
+    React.useEffect(() => {
+        const localCapsules = getCapsules();
+        setCapsuleOptions(
+            localCapsules.map((capsule:CapsuleCollection) => ({
+                value: capsule.id,
+                label: capsule.name,
+            }))
+        );
+    }, []);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!name || !color) return;
         onAdd({ name, color, description, status, capsules });
         onClose();
     };
+    const [previewImage, setPreviewImage] = React.useState<string | null>(null);
+    const previewInputRef = React.useRef<HTMLInputElement>(null);
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setPreviewImage(imageUrl);
+        }
+    };
+
 
     if (!isOpen) return null;
 
@@ -65,17 +85,30 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                     <div className="flex-1 flex flex-col gap-6">
                         <div className={'flex flex-col md:flex-row gap-6'}>
                             <div className="flex gap-4 items-center">
-                                <img src={iconColl} alt="avatar" className="w-16 h-16 rounded-full"/>
+                                <img
+                                    src={previewImage || iconColl}
+                                    alt="avatar"
+                                    className="w-16 h-16 rounded-full object-cover"
+                                />
                                 <div>
                                     <p className="text-sm text-[#8492A6] mb-1">Аватар капсулы</p>
                                     <button
                                         type="button"
                                         className="text-white bg-[#00C8A0] hover:bg-[#00b896] text-sm px-4 py-2 rounded-md"
+                                        onClick={() => previewInputRef.current?.click()}
                                     >
-                                        Изменить аватар
+                                        Загрузить аватар
                                     </button>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        ref={previewInputRef}
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                    />
                                 </div>
                             </div>
+
 
                             <div>
                                 <label className="text-sm text-[#8492A6] block mb-2">Статус</label>

@@ -2,9 +2,12 @@ export interface CapsuleCollection {
     id: string;
     name: string;
     description: string;
-    capsules: string[];
-    expiresAt: string;
-    status: 'active' | 'inactive';
+    capsules?: string[];
+    expiresAt?: string;
+    avatar?: string;
+    avatar2?: string;
+
+    status?: 'active' | 'inactive';
     color: string;
 }
 
@@ -19,7 +22,7 @@ export const collections: CapsuleCollection[] = [
         color: '#fbc748',
     },
     {
-        id: '95461',
+        id: '95462',
         name: 'Тайна леса',
         description: 'Каждая капсула наполнена тщательно отобранными табачными смесями, дарами',
         capsules: ['Звёздная', 'Энергия', 'Вода', 'Воздух', 'Питание', 'Свет'],
@@ -28,7 +31,7 @@ export const collections: CapsuleCollection[] = [
         color: '#84edea',
     },
     {
-        id: '95461',
+        id: '95463',
         name: 'Звёздный вечер',
         description: 'Каждая капсула включает в себя отборные табачные смеси, создавая богатый аромат.',
         capsules: ['Звёздная', 'Энергия', 'Вода', 'Воздух', 'Питание', 'Свет'],
@@ -37,7 +40,7 @@ export const collections: CapsuleCollection[] = [
         color: '#fdb189',
     },
     {
-        id: '95461',
+        id: '95464',
         name: 'Солнечный берег',
         description: 'Каждая капсула наполнена высококачественными табачными смесями,',
         capsules: ['Звёздная', 'Энергия', 'Вода', 'Воздух', 'Питание', 'Свет'],
@@ -46,7 +49,7 @@ export const collections: CapsuleCollection[] = [
         color: '#f994cf',
     },
     {
-        id: '95461',
+        id: '95465',
         name: 'Лунный свет',
         description: 'Каждая капсула содержит отборные табачные смеси, которые обеспечивают яркий аромат.',
         capsules: ['Звёздная', 'Энергия', 'Вода', 'Воздух', 'Питание', 'Свет'],
@@ -55,7 +58,7 @@ export const collections: CapsuleCollection[] = [
         color: '#ccbae5',
     },
     {
-        id: '95461',
+        id: '95466',
         name: 'Ветер перемен',
         description: 'Каждая капсула включает в себя отборные табачные смеси, даря насыщенный и глубокий',
         capsules: ['Звёздная', 'Энергия', 'Вода', 'Воздух', 'Питание', 'Свет'],

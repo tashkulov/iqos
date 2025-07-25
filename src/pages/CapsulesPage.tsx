@@ -1,32 +1,43 @@
 import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
-import { useState } from "react";
-import { capsules as initialCapsules } from "../capsulesData.ts";
+import { useState, useEffect } from "react";
 import CapsuleModal from "../components/modals/CapsuleModal.tsx";
 import MainLayout from "../components/MainLayout.tsx";
 import DeleteModal from "../components/modals/DeleteModal";
 import EditCapsuleModal from "../components/modals/EditCapsuleModal.tsx";
+import type { CapsuleCollection } from "../collectionsData.ts";
+import { capsules as defaultCapsules } from "../capsulesData.ts";
+import {getCapsules, setCapsules} from "../utils/capsulesStorage.ts";
+
+
+
 
 const CapsulesPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    type Capsule = typeof initialCapsules[number] & {
-        avatar2?: string;
-        selectedCapsules?: { value: string; label: string }[];
-    };
-
-    const [capsules, setCapsules] = useState<Capsule[]>(initialCapsules);
+    const [capsules, setCapsulesState] = useState<CapsuleCollection[]>([]);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [capsuleToDelete, setCapsuleToDelete] = useState<Capsule | null>(null);
-    const [_, setEditModalOpen] = useState(false);
-    const [capsuleToEdit, setCapsuleToEdit] = useState<Capsule | null>(null);
+    const [capsuleToDelete, setCapsuleToDelete] = useState<CapsuleCollection | null>(null);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [capsuleToEdit, setCapsuleToEdit] = useState<CapsuleCollection | null>(null);
 
-    const handleDeleteClick = (capsule: Capsule) => {
+    useEffect(() => {
+        const stored = getCapsules();
+        if (stored.length === 0) {
+            setCapsules(defaultCapsules)
+            setCapsulesState(defaultCapsules);
+        } else {
+            setCapsulesState(stored);
+        }
+    }, []);
+
+    const handleDeleteClick = (capsule: CapsuleCollection) => {
         setCapsuleToDelete(capsule);
         setDeleteModalOpen(true);
     };
 
     const handleConfirmDelete = () => {
         if (capsuleToDelete) {
-            setCapsules(prev => prev.filter(c => c.id !== capsuleToDelete.id));
+            const updated = capsules.filter(c => c.id !== capsuleToDelete.id);
+            setCapsules(updated);
             setCapsuleToDelete(null);
             setDeleteModalOpen(false);
         }
@@ -37,43 +48,32 @@ const CapsulesPage = () => {
         setCapsuleToDelete(null);
     };
 
-    const handleAddCapsule = (capsule: Capsule) => {
-        setCapsules(prev => [capsule, ...prev]);
+    const handleAddCapsule = (capsule: CapsuleCollection) => {
+        const updated = [capsule, ...capsules];
+        setCapsules(updated);
     };
 
-
-    const handleEditClick = (capsule: Capsule) => {
+    const handleEditClick = (capsule: CapsuleCollection) => {
         setCapsuleToEdit(capsule);
         setEditModalOpen(true);
     };
 
-    const handleSaveEdit = (values: {
-        name: string;
-        color?: string;
-        description: string;
-        avatarUrl?: string;
-        avatarUrl2?: string;
-        condition?: string;
-        capsuleOrCollection?: string;
-    }) => {
+    const handleSaveEdit = (values: Partial<CapsuleCollection>) => {
         if (capsuleToEdit) {
-            setCapsules(prev =>
-                prev.map(c =>
-                    c.id === capsuleToEdit.id
-                        ? {
-                            ...c,
-                            ...values,
-                            avatar: values.avatarUrl || c.avatar,
-                            avatar2: values.avatarUrl2 || c.avatar2,
-                        }
-                        : c
-                )
+            const updatedCapsule = {
+                ...capsuleToEdit,
+                ...values,
+                avatar: values.avatar || capsuleToEdit.avatar,
+                avatar2: values.avatar2 || capsuleToEdit.avatar2,
+            };
+            const updated = capsules.map(c =>
+                c.id === capsuleToEdit.id ? updatedCapsule : c
             );
+            setCapsules(updated);
             setEditModalOpen(false);
             setCapsuleToEdit(null);
         }
     };
-
 
     const handleCloseEditModal = () => {
         setEditModalOpen(false);
@@ -87,7 +87,6 @@ const CapsulesPage = () => {
                     <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
                         <div className="flex justify-between items-start mb-4">
                             <h2 className="text-xl font-semibold">Капсулы</h2>
-
                             <div className="flex flex-col items-end gap-2">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
@@ -119,17 +118,23 @@ const CapsulesPage = () => {
                             {capsules.map((capsule, index) => (
                                 <tr
                                     key={capsule.id}
-                                    className={`hover:bg-[#f9f9f9] transition text-sm text-gray-700 font-normal ${index % 2 === 1 ? "bg-[#f0ffff]" : "bg-white"}`}
+                                    className={`hover:bg-[#f9f9f9] transition text-sm text-gray-700 font-normal ${
+                                        index % 2 === 1 ? "bg-[#f0ffff]" : "bg-white"
+                                    }`}
                                 >
                                     <td className="px-4 py-2">
-                                        <img src={capsule.avatar} alt="avatar" className="w-6 h-6 rounded-full object-cover" />
+                                        <img
+                                            src={capsule.avatar}
+                                            alt="avatar"
+                                            className="w-6 h-6 rounded-full object-cover"
+                                        />
                                     </td>
                                     <td className="px-4 py-2 text-sm">{capsule.name}</td>
-                                    <td className="px-4 py-2 text-sm text-gray-600">{capsule.description}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-600">
+                                        {capsule.description}
+                                    </td>
                                     <td className="px-4 py-2">{capsule.color}</td>
                                     <td className="px-4 py-2 text-sm">{capsule.id}</td>
-
-
                                     <td className="px-4 py-2">
                                         <button
                                             className="bg-[#f0fbfb] hover:bg-[#e6fcf9] p-2 rounded-md text-[#00C8B3]"
@@ -171,7 +176,6 @@ const CapsulesPage = () => {
                             onSave={handleSaveEdit}
                         />
                     )}
-
                 </div>
             </div>
         </MainLayout>

@@ -2,8 +2,8 @@ import React, {useState, useRef, useEffect} from "react";
 import { BsQrCode } from "react-icons/bs";
 import preview from '../../assets/img_1.png';
 import CustomMultiSelect, {type Option} from "../CustomMultiSelect.tsx";
-import {capsules} from "../../capsulesData.ts";
-import {collections} from "../../collectionsData.ts";
+import {getCapsules} from "../../utils/capsulesStorage.ts";
+import {getCollections} from "../../utils/collectionsStorage.ts";
 
 const AddLocationForm = ({
                              onAdd,
@@ -31,15 +31,28 @@ const AddLocationForm = ({
         { value: "Суши-бар", label: "Суши-бар" },
         { value: "Вегетарианское заведение", label: "Вегетарианское заведение" },
     ];
-    const capsuleOptions: Option[] = capsules.map((capsule) => ({
-        value: capsule.id,
-        label: capsule.name,
-    }));
 
-    const collectionOptions: Option[] = collections.map(col => ({
-        value: col.id,
-        label: col.name,
-    }));
+    const [capsuleOptions, setCapsuleOptions] = React.useState<Option[]>([]);
+    const [collectionOptions, setCollectionOptions] = React.useState<Option[]>([]);
+
+    React.useEffect(() => {
+        const localCapsules = getCapsules();
+        const localCollections = getCollections();
+        setCapsuleOptions(
+            localCapsules.map((capsule: any) => ({
+                value: capsule.id,
+                label: capsule.name,
+            }))
+        );
+        setCollectionOptions(
+            localCollections.map((capsule: any) => ({
+                value: capsule.id,
+                label: capsule.name,
+            }))
+        );
+    }, []);
+
+
 
     const [selectedCapsules, setSelectedCapsules] = useState<Option[]>([]);
     const [selectedCollections, setSelectedCollections] = useState<Option[]>([]);

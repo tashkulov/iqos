@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import icon from "../../assets/icon/addCollectionIcon.svg";
+import type {CapsuleCollection} from "../../collectionsData.ts";
 
 type Capsule = {
     id: string;
@@ -11,7 +12,7 @@ type Capsule = {
 };
 
 interface Props {
-    capsule: Capsule;
+    capsule: CapsuleCollection;
     onClose: () => void;
     onSave: (capsule: Capsule) => void;
 }

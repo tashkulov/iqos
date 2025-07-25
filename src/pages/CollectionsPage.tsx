@@ -3,13 +3,20 @@ import { collections as initialCollections } from "../collectionsData.ts";
 import type { CapsuleCollection } from "../collectionsData.ts";
 import CollectionItem from "../components/CollectionItem.tsx";
 import AddCollectionModal from "../components/modals/AddCollectionModal.tsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MainLayout from "../components/MainLayout.tsx";
 import DeleteModal from "../components/modals/DeleteModal";
 import EditModal from "../components/modals/EditModal";
+import {
+    getCollections,
+    setCollections,
+    addCollection as addCollectionToStorage,
+    removeCollection,
+    updateCollection
+} from "../utils/collectionsStorage";
 
 const CollectionsPage = () => {
-    const [collections, setCollections] = useState<CapsuleCollection[]>(initialCollections);
+    const [collections, setCollectionsState] = useState<CapsuleCollection[]>([]);
     const [search, setSearch] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -17,19 +24,28 @@ const CollectionsPage = () => {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [collectionToEdit, setCollectionToEdit] = useState<CapsuleCollection | null>(null);
 
+    useEffect(() => {
+        const stored = getCollections();
+        if (stored.length === 0) {
+            setCollections(initialCollections);
+            setCollectionsState(initialCollections);
+        } else {
+            setCollectionsState(stored);
+        }
+    }, []);
+
     const handleAddCollection = (data: { name: string; color: string; description: string }) => {
-        setCollections(prev => [
-            {
-                id: Date.now().toString(),
-                name: data.name,
-                description: data.description,
-                capsules: [],
-                expiresAt: "",
-                status: "active",
-                color: data.color,
-            },
-            ...prev,
-        ]);
+        const newCollection = {
+            id: Date.now().toString(),
+            name: data.name,
+            description: data.description,
+            capsules: [],
+            expiresAt: "",
+            status: "active",
+            color: data.color,
+        };
+        addCollectionToStorage(newCollection);
+        setCollectionsState(getCollections());
     };
 
     const handleDeleteClick = (collection: CapsuleCollection) => {
@@ -39,9 +55,8 @@ const CollectionsPage = () => {
 
     const handleConfirmDelete = () => {
         if (collectionToDelete) {
-            setCollections(prev =>
-                prev.filter(c => c.id !== collectionToDelete.id || c.name !== collectionToDelete.name)
-            );
+            removeCollection(collectionToDelete.id);
+            setCollectionsState(getCollections());
             setCollectionToDelete(null);
             setDeleteModalOpen(false);
         }
@@ -54,13 +69,9 @@ const CollectionsPage = () => {
 
     const handleSaveEdit = (values: { name: string; color: string; description: string }) => {
         if (collectionToEdit) {
-            setCollections(prev =>
-                prev.map(c =>
-                    c.id === collectionToEdit.id && c.name === collectionToEdit.name
-                        ? { ...c, ...values }
-                        : c
-                )
-            );
+            const updated = { ...collectionToEdit, ...values };
+            updateCollection(updated);
+            setCollectionsState(getCollections());
             setEditModalOpen(false);
             setCollectionToEdit(null);
         }
@@ -70,20 +81,16 @@ const CollectionsPage = () => {
         <MainLayout>
             <div className="flex bg-[#f0ffff] min-h-screen font-sans">
                 <div className="flex-1 p-6 overflow-auto">
-
-
                     <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
                         <div className="flex justify-between items-start mb-4">
                             <h2 className="text-xl font-semibold">Коллекции капсул</h2>
-
                             <div className="flex flex-col items-end gap-2">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
                                     className="flex items-center gap-2 bg-[#00C865] hover:bg-[#00b85e] text-white font-semibold py-2 px-4 rounded-md"
                                 >
-                                    <FaPlus/> Добавить коллекцию
+                                    <FaPlus /> Добавить коллекцию
                                 </button>
-
                                 <input
                                     type="text"
                                     placeholder="Поиск..."
@@ -93,19 +100,20 @@ const CollectionsPage = () => {
                                 />
                             </div>
                         </div>
+
                         <div className="flex items-center justify-between mb-4">
                             <label className="text-sm text-gray-600">
                                 <select className="border border-gray-300 rounded px-2 py-1 text-sm">
                                     <option>10</option>
                                     <option>25</option>
-                                </select>{" "}
-                                записей на странице
+                                </select> записей на странице
                             </label>
                         </div>
 
                         <table className="w-full text-left border-separate border-spacing-y-2">
                             <thead className="text-xs uppercase text-gray-500">
                             <tr className={'bg-[#f0ffff]'}>
+                                <th className="px-4 py-2"></th>
                                 <th className="px-4 py-2">Название</th>
                                 <th className="px-4 py-2">Описание</th>
                                 <th className="px-4 py-2">Статус</th>
@@ -129,7 +137,6 @@ const CollectionsPage = () => {
                                         isEven={index % 2 === 1}
                                     />
                                 ))}
-
                             </tbody>
                         </table>
                     </div>

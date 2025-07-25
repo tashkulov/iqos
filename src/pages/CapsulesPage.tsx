@@ -6,7 +6,7 @@ import DeleteModal from "../components/modals/DeleteModal";
 import EditCapsuleModal from "../components/modals/EditCapsuleModal.tsx";
 import type { CapsuleCollection } from "../collectionsData.ts";
 import { capsules as defaultCapsules } from "../capsulesData.ts";
-import {getCapsules, setCapsules} from "../utils/capsulesStorage.ts";
+import {getCapsules, removeCapsule, setCapsules, updateCapsule} from "../utils/capsulesStorage.ts";
 
 
 
@@ -16,7 +16,7 @@ const CapsulesPage = () => {
     const [capsules, setCapsulesState] = useState<CapsuleCollection[]>([]);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [capsuleToDelete, setCapsuleToDelete] = useState<CapsuleCollection | null>(null);
-    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [, setEditModalOpen] = useState(false);
     const [capsuleToEdit, setCapsuleToEdit] = useState<CapsuleCollection | null>(null);
 
     useEffect(() => {
@@ -37,11 +37,13 @@ const CapsulesPage = () => {
     const handleConfirmDelete = () => {
         if (capsuleToDelete) {
             const updated = capsules.filter(c => c.id !== capsuleToDelete.id);
-            setCapsules(updated);
+            removeCapsule(capsuleToDelete.id);
+            setCapsulesState(updated);
             setCapsuleToDelete(null);
             setDeleteModalOpen(false);
         }
     };
+
 
     const handleCloseDeleteModal = () => {
         setDeleteModalOpen(false);
@@ -51,6 +53,7 @@ const CapsulesPage = () => {
     const handleAddCapsule = (capsule: CapsuleCollection) => {
         const updated = [capsule, ...capsules];
         setCapsules(updated);
+        setCapsulesState(updated);
     };
 
     const handleEditClick = (capsule: CapsuleCollection) => {
@@ -60,20 +63,24 @@ const CapsulesPage = () => {
 
     const handleSaveEdit = (values: Partial<CapsuleCollection>) => {
         if (capsuleToEdit) {
-            const updatedCapsule = {
+            const updatedCapsule: CapsuleCollection = {
                 ...capsuleToEdit,
                 ...values,
                 avatar: values.avatar || capsuleToEdit.avatar,
                 avatar2: values.avatar2 || capsuleToEdit.avatar2,
             };
+
             const updated = capsules.map(c =>
                 c.id === capsuleToEdit.id ? updatedCapsule : c
             );
-            setCapsules(updated);
+
+            updateCapsule(updatedCapsule);
+            setCapsulesState(updated);
             setEditModalOpen(false);
             setCapsuleToEdit(null);
         }
     };
+
 
     const handleCloseEditModal = () => {
         setEditModalOpen(false);

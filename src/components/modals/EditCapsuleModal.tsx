@@ -21,13 +21,12 @@ const EditCapsuleModal: React.FC<Props> = ({ capsule, onClose, onSave }) => {
     const previewInputRef = useRef<HTMLInputElement>(null);
     const modelInputRef = useRef<HTMLInputElement>(null);
 
-    const [previewImage, setPreviewImage] = useState<string>(capsule.avatar);
+    const [previewImage, setPreviewImage] = useState<string>(capsule.avatar ?? "");
     const [modelImage, setModelImage] = useState<string | null>(capsule.avatar2 ?? null);
     const [name, setName] = useState(capsule.name);
     const [description, setDescription] = useState(capsule.description);
     const [color, setColor] = useState(capsule.color);
 
-    console.log(color)
     const handlePreviewUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) setPreviewImage(URL.createObjectURL(file));

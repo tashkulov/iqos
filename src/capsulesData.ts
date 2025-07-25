@@ -1,7 +1,9 @@
-import icon from './assets/icon/addCollectionIcon.svg'
-export const capsules = [
+import icon from './assets/icon/addCollectionIcon.svg';
+import type { CapsuleCollection } from "./collectionsData.ts";
+
+export const capsules: CapsuleCollection[] = [
     {
-        id: "12345",
+        id: '12345',
         name: "Светлый путь",
         description: "Каждая капсула содержит табачные смеси",
         avatar: icon,
@@ -71,6 +73,7 @@ export const capsules = [
         color: "Вишневый",
     },
 ];
+
 export const LOCATION_TYPES = [
     "Ресторан",
     "Кафе",
@@ -82,5 +85,3 @@ export const LOCATION_TYPES = [
 ] as const;
 
 export type LocationType = typeof LOCATION_TYPES[number];
-
-

@@ -16,13 +16,21 @@ const CollectionItem = ({ collection, onDelete, onEdit,isEven }: Props) => {
             className={`rounded-xl ${
                 isEven ? "bg-[#f0ffff]" : "bg-white"
             } text-sm text-gray-700 font-normal`}
-        >            {/* Название и цвет */}
+        >
+            <td className="px-4 py-6 text-sm text-gray-600 max-w-[300px] truncate">
+                <div className="flex items-center gap-2">
+
+                 <span
+                     className="w-3.5 h-3.5 rounded-full"
+                     style={{backgroundColor: collection.color}}
+                 />
+                </div>
+
+            </td>
+
             <td className="px-4 py-6 whitespace-nowrap rounded-l-xl">
                 <div className="flex items-center gap-2">
-                    <span
-                        className="w-3.5 h-3.5 rounded-full"
-                        style={{ backgroundColor: collection.color }}
-                    />
+
                     <span className="text-sm font-medium text-gray-800">{collection.name}</span>
                 </div>
             </td>

@@ -3,8 +3,8 @@ import { FaTimes } from "react-icons/fa";
 import iconColl from "../../assets/icon/addCollectionIcon.svg";
 import downloadIcon from "../../assets/icon/downloadIcon.svg";
 import CustomMultiSelect, { type Option } from "../CustomMultiSelect.tsx";
-import {capsules} from "../../capsulesData.ts";
-import {collections} from "../../collectionsData.ts";
+import {getCapsules} from "../../utils/capsulesStorage.ts";
+import {getCollections} from "../../utils/collectionsStorage.ts";
 
 interface Props {
     isOpen: boolean;
@@ -37,16 +37,6 @@ interface Props {
     labelSecondAvatar?: string;
 }
 
- const capsuleOptions: Option[] = capsules.map((capsule) => ({
-    value: capsule.id,
-    label: capsule.name,
-}));
-
- const collectionOptions: Option[] = collections.map(col => ({
-    value: col.id,
-    label: col.name,
-}));
-
 const   EditModal: React.FC<Props> = ({
                                         isOpen,
                                         onClose,
@@ -73,6 +63,25 @@ const   EditModal: React.FC<Props> = ({
             setAvatarFile(file);
         }
     };
+    const [capsuleOptions, setCapsuleOptions] = React.useState<Option[]>([]);
+    const [collectionOptions, setCollectionOptions] = React.useState<Option[]>([]);
+
+    React.useEffect(() => {
+        const localCapsules = getCapsules();
+        const localCollections = getCollections();
+        setCapsuleOptions(
+            localCapsules.map((capsule: any) => ({
+                value: capsule.id,
+                label: capsule.name,
+            }))
+        );
+        setCollectionOptions(
+            localCollections.map((capsule: any) => ({
+                value: capsule.id,
+                label: capsule.name,
+            }))
+        );
+    }, []);
 
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 

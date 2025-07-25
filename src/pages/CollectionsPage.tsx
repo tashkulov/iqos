@@ -6,7 +6,6 @@ import AddCollectionModal from "../components/modals/AddCollectionModal.tsx";
 import { useState, useEffect } from "react";
 import MainLayout from "../components/MainLayout.tsx";
 import DeleteModal from "../components/modals/DeleteModal";
-import EditModal from "../components/modals/EditModal";
 import {
     getCollections,
     setCollections,
@@ -14,6 +13,7 @@ import {
     removeCollection,
     updateCollection
 } from "../utils/collectionsStorage";
+import EditCollectionModal from "../components/modals/EditCollectionModal.tsx";
 
 const CollectionsPage = () => {
     const [collections, setCollectionsState] = useState<CapsuleCollection[]>([]);
@@ -66,17 +66,6 @@ const CollectionsPage = () => {
         setCollectionToEdit(collection);
         setEditModalOpen(true);
     };
-
-    const handleSaveEdit = (values: { name: string; color: string; description: string }) => {
-        if (collectionToEdit) {
-            const updated = { ...collectionToEdit, ...values };
-            updateCollection(updated);
-            setCollectionsState(getCollections());
-            setEditModalOpen(false);
-            setCollectionToEdit(null);
-        }
-    };
-
     return (
         <MainLayout>
             <div className="flex bg-[#f0ffff] min-h-screen font-sans">
@@ -156,18 +145,19 @@ const CollectionsPage = () => {
                 />
 
                 {collectionToEdit && (
-                    <EditModal
+                    <EditCollectionModal
                         isOpen={editModalOpen}
                         onClose={() => setEditModalOpen(false)}
-                        onSave={handleSaveEdit}
-                        initialValues={{
-                            name: collectionToEdit.name,
-                            color: collectionToEdit.color,
-                            description: collectionToEdit.description,
+                        onUpdate={(updated) => {
+                            updateCollection(updated);
+                            setCollectionsState(getCollections());
+                            setEditModalOpen(false);
+                            setCollectionToEdit(null);
                         }}
-                        title="Редактировать коллекцию"
+                        initialData={collectionToEdit}
                     />
                 )}
+
             </div>
         </MainLayout>
     );

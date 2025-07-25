@@ -1,54 +1,49 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaTimes } from "react-icons/fa";
 import Select from "react-select";
 import iconColl from "../../assets/icon/addCollectionIcon.svg";
-import CustomMultiSelect, {type Option} from "../CustomMultiSelect.tsx";
-import {getCapsules} from "../../utils/capsulesStorage.ts";
-import type {CapsuleCollection} from "../../collectionsData.ts";
+import CustomMultiSelect, { type Option } from "../CustomMultiSelect.tsx";
+import { getCapsules } from "../../utils/capsulesStorage.ts";
+import type { CapsuleCollection } from "../../collectionsData.ts";
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
-    onAdd: (collection: {
-        name: string;
-        color: string;
-        description: string;
-        status: boolean;
-        capsules: string[];
-    }) => void;
+    onUpdate: (collection: CapsuleCollection) => void;
+    initialData: CapsuleCollection;
 }
 
+const EditCollectionModal: React.FC<Props> = ({ isOpen, onClose, onUpdate, initialData }) => {
+    const [name, setName] = useState(initialData.name);
+    const [color, setColor] = useState(initialData.color || "#ccbae5");
+    const [description, setDescription] = useState(initialData.description);
+    const [status, setStatus] = useState(initialData.status === "active");
+    const [capsules, setCapsules] = useState<string[]>(initialData.capsules || []);
+    const [previewImage, setPreviewImage] = useState<string | null>(initialData.avatar || null);
+    const previewInputRef = useRef<HTMLInputElement>(null);
 
-const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
-    const [name, setName] = React.useState("");
-    const [color, setColor] = React.useState("#ccbae5");
-    const [description, setDescription] = React.useState("");
-    const [status, setStatus] = React.useState(true);
-    const [capsules, setCapsules] = React.useState<string[]>([
-        "Светлый путь",
-        "Тайна леса",
-        "Звёздный вечер",
-    ]);
-    const [capsuleOptions, setCapsuleOptions] = React.useState<Option[]>([]);
+    const [capsuleOptions, setCapsuleOptions] = useState<Option[]>([]);
 
-    React.useEffect(() => {
+
+    useEffect(() => {
         const localCapsules = getCapsules();
         setCapsuleOptions(
-            localCapsules.map((capsule:CapsuleCollection) => ({
+            localCapsules.map((capsule: CapsuleCollection) => ({
                 value: capsule.id,
                 label: capsule.name,
             }))
         );
     }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!name || !color) return;
-        onAdd({ name, color, description, status, capsules });
-        onClose();
-    };
-    const [previewImage, setPreviewImage] = React.useState<string | null>(null);
-    const previewInputRef = React.useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        setName(initialData.name);
+        setColor(initialData.color || "#ccbae5");
+        setDescription(initialData.description);
+        setStatus(initialData.status === "active");
+        setCapsules(initialData.capsules || []);
+        setPreviewImage(initialData.avatar || null);
+    }, [initialData]);
+
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -58,6 +53,19 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
         }
     };
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onUpdate({
+            ...initialData,
+            name,
+            description,
+            color,
+            avatar: previewImage || iconColl,
+            status: status ? "active" : "inactive",
+            capsules,
+        });
+        onClose();
+    };
 
     if (!isOpen) return null;
 
@@ -70,7 +78,6 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
         { value: "#00C8A0", label: "Зеленый" },
     ];
 
-
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center p-4">
             <div className="bg-white w-full max-w-5xl rounded-2xl p-8 relative">
@@ -81,11 +88,10 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                     <FaTimes size={18} />
                 </button>
 
-                <h2 className="text-2xl font-semibold mb-6">Добавить коллекцию</h2>
+                <h2 className="text-2xl font-semibold mb-6">Редактировать коллекцию</h2>
 
                 <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-10">
-
-
+                    {/* Левая часть */}
                     <div className="flex-1 flex flex-col gap-6">
                         <div className={'flex flex-col md:flex-row gap-6'}>
                             <div className="flex gap-4 items-center">
@@ -113,89 +119,66 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
                                 </div>
                             </div>
 
-
                             <div>
                                 <label className="text-sm text-[#8492A6] block mb-2">Статус</label>
                                 <div className="flex gap-2">
                                     <button
                                         type="button"
                                         onClick={() => setStatus(true)}
-                                        className={`px-4 py-2 rounded-full text-sm font-medium ${
-                                            status ? "bg-[#00C8A0] text-white" : "bg-gray-100 text-black"
-                                        }`}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium ${status ? "bg-[#00C8A0] text-white" : "bg-gray-100 text-black"}`}
                                     >
                                         Активная
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setStatus(false)}
-                                        className={`px-4 py-2 rounded-full text-sm font-medium ${
-                                            !status ? "bg-[#00C8A0] text-white" : "bg-gray-100 text-black"
-                                        }`}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium ${!status ? "bg-[#00C8A0] text-white" : "bg-gray-100 text-black"}`}
                                     >
                                         Не Активная
                                     </button>
                                 </div>
                             </div>
-
                         </div>
 
                         <div className={'flex flex-col md:flex-row gap-6'}>
                             <div>
-                                <label className="text-sm text-[#8492A6] block mb-1">
-                                    Название (макс. 50 символов)
-                                </label>
+                                <label className="text-sm text-[#8492A6] block mb-1">Название</label>
                                 <input
                                     type="text"
                                     maxLength={50}
                                     className="w-full border rounded-md px-3 py-2 text-sm"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="Введите название"
                                 />
                             </div>
                             <div>
                                 <label className="text-sm text-[#8492A6] block mb-1">Цвет капсулы</label>
                                 <Select
                                     options={colorOptions}
-                                    defaultValue={colorOptions.find((c) => c.value === color)}
+                                    value={colorOptions.find(c => c.value === color)}
                                     onChange={(option) => setColor(option?.value || "")}
-                                    placeholder="Выберите"
-                                    className={'w-full'}
-                                    styles={{
-                                        control: (base) => ({
-                                            ...base,
-                                            minHeight: "40px",
-                                            borderRadius: "0.375rem",
-                                            fontSize: "0.875rem",
-                                        }),
-                                    }}
+                                    className="w-full"
                                 />
                             </div>
-
                         </div>
+
                         <div>
-                            <label className="text-sm text-[#8492A6] block mb-1">
-                                Описание (макс. 250 символов)
-                            </label>
+                            <label className="text-sm text-[#8492A6] block mb-1">Описание</label>
                             <textarea
                                 maxLength={250}
                                 rows={3}
                                 className="w-full border rounded-md px-3 py-2 text-sm"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Введите описание"
                             />
                         </div>
 
-
-                        {/* Кнопки */}
                         <div className="flex gap-4 pt-2">
                             <button
                                 type="submit"
                                 className="bg-[#00C8A0] hover:bg-[#00b894] text-white text-sm font-semibold px-6 py-2 rounded-md"
                             >
-                                Добавить
+                                Сохранить
                             </button>
                             <button
                                 type="button"
@@ -209,28 +192,20 @@ const AddCollectionModal: React.FC<Props> = ({ isOpen, onClose, onAdd }) => {
 
                     {/* Правая часть */}
                     <div className="w-full md:max-w-sm flex flex-col gap-6">
-                        {/* Капсулы */}
                         <div>
-                            <label className="text-sm text-[#8492A6] block mb-1">
-                                Капсулы (от N до Y)
-                            </label>
+                            <label className="text-sm text-[#8492A6] block mb-1">Капсулы</label>
                             <CustomMultiSelect
                                 options={capsuleOptions}
                                 selected={capsuleOptions.filter(opt => capsules.includes(opt.value))}
                                 onChange={(selected) => setCapsules(selected.map(s => s.value))}
                                 placeholder="Выберите несколько"
                             />
-
                         </div>
-
-                        {/* Цвет */}
-                        {/* Здесь оставляй следующий блок */}
                     </div>
-
                 </form>
             </div>
         </div>
     );
 };
 
-export default AddCollectionModal;
+export default EditCollectionModal;
